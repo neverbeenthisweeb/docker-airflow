@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 default_args = {
     "owner": "airflow",
     "depends_on_past": False,
-    "start_date": datetime.now() - timedelta(minutes=2),
+    "start_date": datetime.now() - timedelta(minutes=5),
     "email": ["airflow@airflow.com"],
     "email_on_failure": False,
     "email_on_retry": False,
@@ -22,12 +22,8 @@ default_args = {
     # 'end_date': datetime(2016, 1, 1),
 }
 
-dag = DAG("sdet_1", default_args=default_args, schedule_interval="0/1 * * * *")
+dag = DAG("sleep_2", default_args=default_args, schedule_interval="0/5 * * * *")
 
-t1 = BashOperator(task_id="print_date", bash_command="date", dag=dag)
+t1 = BashOperator(task_id="sleep_2", bash_command="sleep 2m", dag=dag)
 
-t2 = BashOperator(task_id="america", bash_command="echo america", retries=3, dag=dag)
-
-t3 = BashOperator(task_id="indonesia", bash_command="echo indonesia", retries=3, dag=dag)
-
-t1 >> [t2, t3]
+t1
